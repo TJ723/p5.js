@@ -1,0 +1,46 @@
+// mouse rainbow trail
+
+let boxes = [];
+
+function setup() {
+  createCanvas(800, 600);
+  colorMode(HSB, 360, 100, 100); // Set color mode to HSB
+}
+
+function draw() {
+  background(220);
+
+  for (let i = boxes.length - 1; i >= 0; i--) {
+    boxes[i].display();
+    if (boxes[i].timerFinished()) {
+      boxes.splice(i, 1);
+    }
+  }
+}
+
+function mouseMoved() {
+  boxes.push(new BlackBox(mouseX, mouseY));
+}
+
+class BlackBox {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.size = 8;
+    this.timer = 640; // 3 seconds in milliseconds
+    this.startTime = millis();
+  }
+
+  display() {
+    let elapsedTime = millis() - this.startTime;
+    let hue = map(elapsedTime, 0, this.timer, 0, 360); // Calculate hue for rainbow effect
+
+    noStroke();
+    fill(hue, 100, 100); // Use HSB color based on hue
+    ellipse(this.x, this.y, this.size, this.size); // Draw a circle with rainbow effect
+  }
+
+  timerFinished() {
+    return millis() - this.startTime >= this.timer;
+  }
+}

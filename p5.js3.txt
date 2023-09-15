@@ -1,0 +1,47 @@
+// mouse circle fade
+
+
+
+let boxes = [];
+
+function setup() {
+  createCanvas(800, 600);
+}
+
+function draw() {
+  background(220);
+
+  for (let i = boxes.length - 1; i >= 0; i--) {
+    boxes[i].display();
+    if (boxes[i].timerFinished()) {
+      boxes.splice(i, 1);
+    }
+  }
+}
+
+function mouseMoved() {
+  boxes.push(new BlackBox(mouseX, mouseY));
+}
+
+class BlackBox {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.size = 15;
+    this.timer = 3000; // 3 seconds in milliseconds
+    this.startTime = millis();
+  }
+
+  display() {
+    let elapsedTime = millis() - this.startTime;
+    let alpha = map(elapsedTime, 0, this.timer, 255, 0); // Calculate alpha for gradient effect
+
+    noStroke();
+    fill(0, alpha);
+    ellipse(this.x, this.y, this.size, this.size); // Draw a circle with gradient effect
+  }
+
+  timerFinished() {
+    return millis() - this.startTime >= this.timer;
+  }
+}
